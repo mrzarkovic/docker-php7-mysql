@@ -10,6 +10,9 @@ services:
     restart: always
     volumes:
       - ./reverseproxy/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.1
 
   nginx_web:
     build: ./nginx
@@ -17,6 +20,9 @@ services:
     volumes:
       - ./nginx/public:/var/www/html
       - ./nginx/conf/site.conf:/etc/nginx/conf.d/site.conf
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.2
 
   php7:
     build: ./php-7
@@ -24,11 +30,14 @@ services:
     volumes:
       - ./nginx/public:/var/www/html
       - ./php-7/conf/php.ini:/usr/local/etc/php/php.ini
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.3
 
   db:
     image: mysql:5.7
     ports:
-      - "3306:3306"
+      - 3306:3306
     volumes:
       - ./db_data:/var/lib/mysql
     restart: always
@@ -36,3 +45,13 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=db_user
       - MYSQL_PASSWORD=db_pass
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.4
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          ip_range: 172.28.5.0/24
