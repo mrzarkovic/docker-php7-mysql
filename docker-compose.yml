@@ -43,8 +43,6 @@ services:
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=db_user
-      - MYSQL_PASSWORD=db_pass
     networks:
       static-network:
         ipv4_address: 172.20.128.4
